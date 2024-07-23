@@ -1,24 +1,28 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "SerialClass.h"
+#include <iostream>
+#include <sstream>
+#include <chrono>
+#include <thread>
 
 int main() {
-    // 시리얼 포트 설정 (Mac에서는 "/dev/tty.usbmodem14101" 같은 포트를 사용합니다)
-    Serial serialPort("/dev/tty.usbmodem14101");
+    Serial serialPort("/dev/tty.usbmodem142101");
 
     if (!serialPort.IsConnected()) {
-        printf("Failed to connect to the serial port!\n");
+        std::cerr << "Failed to connect to the serial port!" << std::endl;
         return -1;
     }
 
-    // 배열 초기화 (배열 크기는 여기서 바꿀 수 있음)
-    const int width = 32;
-    const int height = 8;
+    const int width = 3;
+    const int height = 3;
 
     std::vector<std::vector<int>> array(height, std::vector<int>(width, 0));
 
-    // SFML 윈도우 생성
-    sf::RenderWindow window(sf::VideoMode(800, 200), "Array Visualization");
+    sf::RenderWindow window(sf::VideoMode(800, 200), "Visualization Program");
+
+    auto lastTime = std::chrono::steady_clock::now();
+    const std::chrono::milliseconds interval(1000); // 1초
 
     while (window.isOpen()) {
         sf::Event event;
@@ -28,22 +32,40 @@ int main() {
             }
         }
 
-        // 시리얼 포트로부터 데이터 읽기
-        char buffer[width * height];
-        int bytesRead = serialPort.ReadData(buffer, sizeof(buffer));
+        auto now = std::chrono::steady_clock::now();
+        if (now - lastTime >= interval) {
+            lastTime = now;
 
-        if (bytesRead > 0) {
-            // 데이터를 배열로 변환
-            for (int i = 0; i < bytesRead; ++i) {
-                int row = i / width;
-                int col = i % width;
-                array[row][col] = static_cast<unsigned char>(buffer[i]); // 값이 음수가 되지 않도록 변환
+            // Read data from serial port
+            char buffer[256];
+            int bytesRead = serialPort.ReadData(buffer, sizeof(buffer) - 1);
+
+            if (bytesRead > 0) {
+                buffer[bytesRead] = '\0'; // Null-terminate the buffer
+                std::string receivedData(buffer);
+
+                std::istringstream ss(receivedData);
+                for (int i = 0; i < height; ++i) {
+                    for (int j = 0; j < width; ++j) {
+                        if (!(ss >> array[i][j])) {
+                            array[i][j] = 0; // Default value if parsing fails
+                        }
+                    }
+                }
+
+                // Print array for debugging
+                for (int i = 0; i < height; ++i) {
+                    for (int j = 0; j < width; ++j) {
+                        std::cout << array[i][j] << " ";
+                    }
+                    std::cout << std::endl;
+                }
             }
         }
 
         window.clear();
 
-        // 배열을 시각화
+        // Draw the visualization
         float barWidth = window.getSize().x / width;
         float barHeight = window.getSize().y / height;
         for (int i = 0; i < height; ++i) {
@@ -51,10 +73,13 @@ int main() {
                 sf::RectangleShape bar(sf::Vector2f(barWidth - 1, barHeight - 1));
                 bar.setPosition(j * barWidth, i * barHeight);
 
-                // 색상 설정 (여기서는 값을 0-255 범위로 가정)
                 int value = array[i][j];
-                bar.setFillColor(sf::Color(value, 255 - value, 100));
+                sf::Color color;
+                color.r = value;               // 빨간색 (값이 클수록 강해짐)
+                color.g = 255 - value;         // 초록색 (값이 작을수록 강해짐)
+                color.b = 100;                 // 파란색은 고정 (느낌을 줄 수 있도록)
 
+                bar.setFillColor(color);
                 window.draw(bar);
             }
         }
@@ -65,7 +90,8 @@ int main() {
     return 0;
 }
 
-/* 
+
+/*
 컴파일 및 실행할 수 있게 하는 코드
 g++ -std=c++17 visualizedProgram.cpp Serial.cpp -o visualizedProgram -lsfml-graphics -lsfml-window -lsfml-system
 ./visualizedProgram

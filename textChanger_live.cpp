@@ -25,12 +25,11 @@ void saveArrayToFile(const vector<vector<int>>& array, const string& filename) {
 }
 
 int main() {
-    int rows = 16, cols = 32;
+    int rows = 20, cols = 9;
     vector<vector<int>> array(rows, vector<int>(cols));
     string portName;
 
-    cout << "아두이노의 시리얼 포트 이름을 입력하세요 (예: COM3 또는 /dev/ttyUSB0): ";
-    cin >> portName;
+    portName = "/dev/tty.usbmodem142101"; // 시리얼 포트 이름 입력
 
     Serial arduino(portName.c_str()); // 아두이노 객체 생성
 
@@ -63,8 +62,7 @@ int main() {
     }
 
     string filepath;
-    cout << "배열을 저장할 파일 경로를 입력하세요 (예: C:/path/to/file.txt): ";
-    cin >> filepath;
+    filepath = "/Users/godhyunjong/Desktop/Work/School/Capstone_Design/text/textArray.txt";
 
     saveArrayToFile(array, filepath);
 
@@ -82,7 +80,9 @@ int main() {
  *  이 프로그램은 SerialClass.h와 SerialClass.cpp 파일을 사용합니다.
  *  macOS에서 사용 방법
     시리얼 포트 확인: 아두이노가 연결된 시리얼 포트를 확인합니다. 예를 들어, /dev/tty.usbmodemXXXX 또는 /dev/tty.usbserial-XXXX와 같은 형태입니다.
-    컴파일: g++ textChanger.cpp SerialClass.cpp -o textChanger
-    실행: ./textChanger
- */
+    컴파일: g++ -std=c++17 textChanger_live.cpp Serial.cpp -o textChanger_live
+    ./textChanger_live 
 
+    포트 이름 : /dev/tty.usbmodem142101
+    filepath : /Users/godhyunjong/Desktop/Work/School/Capstone Design/text
+ */
