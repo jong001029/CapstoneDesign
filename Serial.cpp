@@ -106,8 +106,8 @@ int Serial::ReadData(char *buffer, unsigned int nbChar)
 
     return 0;
     #else
-    int bytesRead = read(this->fd, buffer, nbChar);
-    return (bytesRead < 0) ? -1 : bytesRead;
+    int bytesRead = read(this->fd, buffer, nbChar); // 시리얼 포트로부터 데이터를 읽음
+    return (bytesRead < 0) ? -1 : bytesRead; // 읽은 데이터의 바이트 수를 반환 (bytesRead가 0보다 작으면 -1을 반환)
     #endif
 }
 

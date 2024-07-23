@@ -80,4 +80,9 @@ int main() {
  *          읽어온 배열은 입력받은 파일 경로에 저장됩니다.
  * 
  *  이 프로그램은 SerialClass.h와 SerialClass.cpp 파일을 사용합니다.
+ *  macOS에서 사용 방법
+    시리얼 포트 확인: 아두이노가 연결된 시리얼 포트를 확인합니다. 예를 들어, /dev/tty.usbmodemXXXX 또는 /dev/tty.usbserial-XXXX와 같은 형태입니다.
+    컴파일: g++ textChanger.cpp SerialClass.cpp -o textChanger
+    실행: ./textChanger
  */
+
