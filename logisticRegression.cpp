@@ -17,7 +17,7 @@ double sigmoid(double z) {
 // 예측 함수
 double predict(const vector<double>& weights, const vector<double>& x) {
     double z = 0.0;
-    for (size_t i = 0; i < weights.size(); ++i) {
+    for (size_t i = 0; i < weights.size(); ++i) { 
         z += weights[i] * x[i];
     }
     return sigmoid(z);
@@ -93,7 +93,7 @@ int main() {
 
     // 학습률 및 반복 횟수 설정 (Hyperparameter)
     double learning_rate = 1e-10;
-    int epochs = 100000;
+    int epochs = 10000;
 
     // 모델 학습
     train(weights, X, y, learning_rate, epochs);

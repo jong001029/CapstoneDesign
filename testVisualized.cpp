@@ -51,3 +51,7 @@ int main() {
 
     return 0;
 }
+/* 실행 및 컴파일 코드
+g++ -std=c++17 testVisualized.cpp Serial.cpp -o visualizedProgram -lsfml-graphics -lsfml-window -lsfml-system
+./visualizedProgram 
+*/
