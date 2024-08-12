@@ -1,9 +1,10 @@
 # CapstoneDesign
 
 * 2024 inha univ capstone Design에 사용될 logistic regression을 c++로 구현.
-* 아직은 예제 데이터셋을 이용.
-* 센서를 통해서 받은 몸무게 예제 데이터 셋을 txt 파일로 받아와 이를 logistic Regression으로 돌려 예측을 진행시킨다.
-* 현재 센서입력으로 받은 True, False간 값이 너무나 촘촘하고 별 차이가 없기 때문에 Learning Rate와 Epoch를 크게 증가시켜 거의 overfitting이 될 수 있도록 설정
-* 그러나 추후 사람들의 다양한 몸무게를 직접 입력 받으며, 어느 정도 General한 값, 유의미한 값들이 입력이 된다면 적절한 Parameter를 찾는 Tuning을 진행할 예정.
-* 아두이노 시리얼 통신으로 받은 배열을 텍스트 파일로 저장하는 프로그램과 시각화할 수 있는 프로그램을 추가하였다.
+* totalProgram을 통해서 데이터셋을 수집함과 동시에 시각화를 할 수 있게 구현하였으며, 이는 센서를 통해 입력된 행렬과 캘리브레이션된 행렬을 곱하여 최종 result를 시각화를 하며,
+동시에 텍스트로 저장을 하여 이후 logistic regression을 진행할 예정이다.
+* 이렇게 logistic regression을 통해 1명인지 아닌지 구분하여 한 명이 아니라면 시동이 걸리지 않게 할 예정
+
+* 이때 최종 result와 센서와 싱크를 맞게 하기 위해 아두이노 쪽에서 하나의 행렬이 다 보내지면 -1을 출력하게 하였고, totalProgram을 보면 알 수 있듯 -1이 들어오게 된다면
+하나의 행렬의 입력이 끝났다고 판단을 할 수 있게 하여 싱크를 맞추었다.
 
