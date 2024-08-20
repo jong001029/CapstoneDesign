@@ -1,4 +1,3 @@
-//REsampling Strategy를 적용한 Mask 테스트 프로그램
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <iostream>
@@ -7,6 +6,7 @@
 #include <thread>
 #include <fstream>
 #include <cmath>  // 표준 편차 계산을 위한 헤더 파일 포함
+#include <algorithm> // 최댓값과 최솟값 계산을 위해 필요
 #include "SerialClass.h"
 
 // 주위 이웃 값을 이용해 x 값을 계산하는 함수
@@ -91,6 +91,7 @@ int main() {
     std::ofstream maskFile("mask_output.txt");  // Mask 데이터를 기록할 파일
     std::ofstream finalMatrixFile("final_matrix_output.txt");  // 최종 행렬 데이터를 기록할 파일
     std::ofstream upscaledMatrixFile("upscaled_matrix_output.txt");  // 업스케일된 행렬을 기록할 파일
+    std::ofstream stddevFile("stddev_output.txt");  // 표준 편차 데이터를 기록할 파일
 
     // 메인 루프, 창이 열려 있는 동안 실행
     while (window.isOpen()) {
@@ -203,6 +204,16 @@ int main() {
                     }
                     upscaledMatrixFile << std::endl;
 
+                    // 표준 편차를 16x8 행렬로 기록
+                    for (int i = 0; i < height; ++i) {
+                        for (int j = 0; j < width; ++j) {
+                            float localStdDev = std::sqrt(result[i][j] * result[i][j] - (finalMatrix[i][j] * finalMatrix[i][j]));
+                            stddevFile << localStdDev << " ";
+                        }
+                        stddevFile << std::endl;
+                    }
+                    stddevFile << std::endl;
+
                     // 시각화를 위한 데이터 그리기
                     window.clear();  // 창을 지움 (새로고침)
 
@@ -214,10 +225,10 @@ int main() {
                             sf::RectangleShape bar(sf::Vector2f(barWidth - 1, barHeight - 1));  // 바의 크기를 설정
                             bar.setPosition(j * barWidth, i * barHeight);  // 바의 위치 설정
 
-                            int value = static_cast<int>(upscaledMatrix[i][j] * 255 / *std::max_element(upscaledMatrix[i].begin(), upscaledMatrix[i].end()));  // 최종 값에 따라 색상 계산
+                            // 단순한 시각화 예시 (초기 컬러 셋업, 필요에 따라 조정 가능)
                             sf::Color color;
-                            color.r = value;  // 값에 따른 색상 조정
-                            color.g = 255 - value;
+                            color.r = static_cast<sf::Uint8>(upscaledMatrix[i][j] * 255 / 1100);
+                            color.g = 255 - color.r;
                             color.b = 0;
 
                             bar.setFillColor(color);  // 바의 색상을 설정
@@ -234,11 +245,12 @@ int main() {
     maskFile.close();  // 프로그램 종료 시 파일을 닫음
     finalMatrixFile.close();  // 최종 행렬 파일을 닫음
     upscaledMatrixFile.close();  // 업스케일링된 행렬 파일을 닫음
+    stddevFile.close();  // 표준 편차 파일을 닫음
     return 0;
 }
 
 /*
 컴파일 및 실행할 수 있게 하는 코드
-g++ -std=c++17 masktest.cpp Serial.cpp -o masktest -lsfml-graphics -lsfml-window -lsfml-system
-./masktest
+g++ -std=c++17 stdtest.cpp Serial.cpp -o stdtest -lsfml-graphics -lsfml-window -lsfml-system
+./stdtest
 */
