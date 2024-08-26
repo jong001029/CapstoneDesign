@@ -1,3 +1,4 @@
+//Text 디렉토리 내부에 있는 true와 false를 로지스틱 회귀를 위하여 분류할 수 있게 만든 코드
 #include <iostream>
 #include <vector>
 #include <cmath>
