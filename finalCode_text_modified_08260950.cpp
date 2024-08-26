@@ -1,3 +1,4 @@
+// 텍스트 입력을 좀 더 간단하게 할 수 있도록 변경하였고, 시각화도 jet를 이용하여 시각화를 구현해놓음.
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <iostream>
