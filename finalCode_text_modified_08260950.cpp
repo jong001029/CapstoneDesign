@@ -1,4 +1,3 @@
-// 텍스트 입력을 좀 더 간단하게 할 수 있도록 변경하였음.
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <iostream>
@@ -65,11 +64,13 @@ void upscaleMatrix(const std::vector<std::vector<float>>& inputMatrix, std::vect
 // Jet 컬러맵에 따른 색상 변환 함수
 sf::Color getJetColor(float value, float vmin, float vmax) {
     float ratio = 2 * (value - vmin) / (vmax - vmin);
-    int r = std::max(0.0f, 255 * (ratio - 1));
-    int g = std::max(0.0f, 255 * (1 - std::abs(ratio - 1)));
-    int b = std::max(0.0f, 255 * (1 - ratio));
+    int r = std::min(255.0f, std::max(0.0f, 255 * (ratio - 0.5f)));
+    int g = std::min(255.0f, std::max(0.0f, 255 * (1.0f - std::abs(ratio - 1.0f))));
+    int b = std::min(255.0f, std::max(0.0f, 255 * (1.5f - ratio)));
     return sf::Color(r, g, b);
 }
+
+
 
 // 파일 경로를 생성하는 함수
 std::string getFilePath(const std::string& directory, const std::string& fileName) {
@@ -78,7 +79,7 @@ std::string getFilePath(const std::string& directory, const std::string& fileNam
 
 int main() {
     // 시리얼 포트를 초기화하고 연결
-    Serial serialPort("/dev/cu.usbmodem14201"); // 시리얼 포트의 경로를 지정
+    Serial serialPort("/dev/cu.usbmodem14201"); // 시리얼 포트의 경로를 지정(포트에 맞게 변경이 필요함. Windows의 경우 "COM3" 등으로 지정)
 
     // 시리얼 포트 연결 여부를 확인
     if (!serialPort.IsConnected()) {
@@ -243,7 +244,7 @@ int main() {
 
                     // 업스케일링된 데이터의 최솟값과 최댓값을 찾음
                     float vmin = 0.0f;
-                    float vmax = 1900.0f;
+                    float vmax = 2000.0f;
 
                     for (int i = 0; i < newHeight; ++i) {
                         for (int j = 0; j < newWidth; ++j) {
@@ -271,6 +272,6 @@ int main() {
 
 /*
 컴파일 및 실행할 수 있게 하는 코드
-g++ -std=c++17 finalCode.cpp Serial.cpp -o finalCode -lsfml-graphics -lsfml-window -lsfml-system
-./finalCode
+g++ -std=c++17 finalCode_text_modified_08260950.cpp Serial.cpp -o finalCode_text_modified_08260950 -lsfml-graphics -lsfml-window -lsfml-system
+./finalCode_text_modified_08260950
 */
