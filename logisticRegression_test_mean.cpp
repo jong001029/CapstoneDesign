@@ -24,6 +24,7 @@ double predict(const vector<double>& weights, const vector<double>& x) {
 }
 
 // 경사 하강법으로 로지스틱 회귀 학습 (SGD)
+// 훈련 함수
 void train(vector<double>& weights, const vector<vector<double>>& X, const vector<int>& y, double learning_rate, int epochs) {
     size_t m = X.size();
     size_t n = weights.size();
@@ -34,12 +35,12 @@ void train(vector<double>& weights, const vector<vector<double>>& X, const vecto
         for (size_t i = 0; i < m; ++i) {
             double h = predict(weights, X[i]);
             for (size_t j = 0; j < n; ++j) {
-                gradients[j] += (h - y[i]) * X[i][j];
+                gradients[j] += (h - y[i]) * X[i][j]; // 기울기 계산
             }
         }
 
         for (size_t j = 0; j < n; ++j) {
-            weights[j] -= learning_rate * gradients[j] / m;
+            weights[j] -= learning_rate * gradients[j] / m; // 평균 기울기를 이용하여 가중치 업데이트
         }
     }
 }

@@ -187,15 +187,15 @@ int main() {
                         float std_dev = std::sqrt((sum_sq / n) - (mean * mean));
 
                         float Thup = mean + std_dev;
-                        float Than = mean - std_dev;
+                        float Thdn = mean - std_dev;
 
-                        std::cout << "Thup: " << Thup << ", Than: " << Than << std::endl;
+                        std::cout << "Thup: " << Thup << ", Thdn: " << Thdn << std::endl;
 
                         std::vector<std::vector<int>> Mask(height, std::vector<int>(width, 0));
 
                         for (int i = 0; i < height; ++i) {
                             for (int j = 0; j < width; ++j) {
-                                if (result[i][j] < Thup && result[i][j] > Than) {
+                                if (result[i][j] < Thup && result[i][j] > Thdn) {
                                     Mask[i][j] = 1;
                                 } else {
                                     Mask[i][j] = 0;
