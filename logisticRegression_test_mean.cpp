@@ -134,11 +134,14 @@ int main() {
     cout << "Accuracy: " << accuracy * 100.0 << "%" << endl;
 
     // 가중치 출력
-    cout << "Weights: ";
-    for (const auto& weight : weights) {
-        cout << weight << " ";
+    cout << "Weights (16x32):" << endl;
+    for (size_t i = 0; i < 16; ++i) {
+        for (size_t j = 0; j < 32; ++j) {
+            cout << weights[i * 32 + j];
+            if (j < 31) cout << ", ";  // 각 요소 사이에 콤마 추가, 마지막에는 제외
+        }
+        cout << endl;
     }
-    cout << endl;
 
     // 사용자로부터 테스트 파일 경로 입력받기
     cout << "테스트할 텍스트 파일의 경로를 입력하세요: ";
